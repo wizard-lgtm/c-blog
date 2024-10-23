@@ -1,26 +1,24 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include "markdown_operations.h"
-#include "dotenv.h"
-#include "db_operations.h"
 #include <mongoc/mongoc.h>
+#include "db_operations.h"
+int main(void) {
+    // Get mongodb uri connection string from .env file
+    char* dburi = get_db_uri();
+    // Create mongodb client 
+    mongoc_client_t* client = connect_db(dburi);
 
-int main() {
-    env_load(".", false);
-    mongoc_client_t* client = connect_db();
-    if(client == NULL){
-        perror("Some error happened while connecting to db");
-        return 1;
+    // Get a handle on the "admin" database.
+    mongoc_database_t *database = mongoc_client_get_database(client, "admin");
+    if (!database) {
+        fprintf(stderr, "Failed to get a MongoDB database handle.\n");
+        return NULL;
     }
+    mongoc_collection_t *collection = mongoc_database_get_collection(database, "post"); 
 
-    char* filename = "./file.md";
-    char* html = convert_md_file_to_html(filename);
-    if (!html) {
-        return 1;
-    }
-    printf("Converted HTML:\n%s\n", html);
+    
 
-    free(html);
+
+    mongoc_database_destroy(database);
+    mongoc_collection_destroy(collection);
+    // Cleanup server 
     cleanup_db(client);
-    return 0;
 }
