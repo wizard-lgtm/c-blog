@@ -3,10 +3,10 @@ CC = gcc
 
 # Compiler flags
 
-CFLAGS = -Wall -Wextra -I./include -I/usr/local/include
+CFLAGS = -Wall -Wextra -I./include -I/usr/local/include -I/usr/include/libmongoc-1.0 -I/usr/include/libbson-1.0
 
 # Linker flags
-LDFLAGS = -lcmark
+LDFLAGS = -lcmark -ldotenv -lmongoc-1.0 -lbson-1.0
 
 # Source file
 SRC = $(wildcard *.c)
