@@ -2,9 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-char* readfile(char* filename) {
+char* read_file(char* filename) {
   FILE* file = fopen(filename, "r");
   if (!file) {
+    fprintf(stderr,"Error: File %s not found\n", filename);
     return NULL;
   }
   long size = 0;
